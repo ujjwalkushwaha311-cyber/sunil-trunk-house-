@@ -7,14 +7,17 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+
     try:
-        from django.core.management import execute_from_command_line
-    except ImportError as exc:
+        import pymysql
+        pymysql.install_as_MySQLdb()
+    except ImportError:
         raise ImportError(
-            "Couldn't import Django. Are you sure it's installed and "
-            "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
-        ) from exc
+            "PyMySQL is required to use the MySQL backend with this project. "
+            "Install it with `pip install PyMySQL` or add it to requirements.txt."
+        )
+
+    from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
 
 
