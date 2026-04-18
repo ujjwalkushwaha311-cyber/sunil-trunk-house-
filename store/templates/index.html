@@ -1,0 +1,349 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunil Trunk House | Premium Steel Furniture</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <link rel="shortcut icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+
+
+
+<body>
+{% include 'navbar.html' %}
+<main>
+
+<div class="hero-page-wrapper">
+    <section class="hero-section">
+        <div class="hero-copy">
+            <span class="eyebrow">Premium Steel Storage</span>
+            <h1>Strong, Secure & Stylish Storage Solutions</h1>
+            <p>Explore high-quality almirahs, trunks, coolers and steel stands built for durability, modern homes and trusted performance.</p>
+            <div class="hero-actions">
+                <a href="{% url 'products' %}" class="btn primary-btn">Browse Products</a>
+                <a href="{% url 'contact' %}" class="btn secondary-btn">Contact Sales</a>
+            </div>
+        </div>
+        <div class="hero-slider-card">
+            <section class="hero-slider-container">
+                <button type="button" class="nav-btn prev">&#10094;</button>
+                <button type="button" class="nav-btn next">&#10095;</button>
+
+                <div class="slider-content">
+                    {% for slider in slider_images %}
+                        <div class="slide {% if forloop.first %}active{% endif %}">
+                            <div class="img-box">
+                                <img src="{{ slider.image.url }}" alt="{{ slider.caption|default:'Slider Image' }}">
+                            </div>
+                            {% if slider.caption %}
+                                <div class="slide-info">{{ slider.caption }}</div>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <div class="slide active">
+                            <div class="img-box">
+                                <img src="{% static 'almirah_img/img1_large.webp' %}" alt="Large Model 1">
+                            </div>
+                            <div class="slide-info">Model: Rajshree | ₹15,000</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <section class="trust-strip" data-aos="fade-up" data-aos-delay="200">
+        <div class="strip-content">
+            <div class="strip-item"><i class="fas fa-award"></i> India's No. 1 Trunk House</div>
+            <div class="strip-item"><i class="fas fa-shield-alt"></i> 10 Years Lock Guarantee</div>
+            <div class="strip-item"><i class="fas fa-paint-roller"></i> 10 Years Paint Guarantee</div>
+            <div class="strip-item"><i class="fas fa-truck"></i> Free Home Delivery</div>
+        </div>
+    </section>
+</div>
+
+{% if search_query %}
+    <section class="product-section search-results" data-aos="fade-up">
+        <h2>Search results for “{{ search_query }}”</h2>
+        {% if search_results and search_results.exists %}
+            <div class="product-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6">
+                {% for product in search_results %}
+                    {% include 'partials/_product_card.html' with product=product %}
+                {% endfor %}
+            </div>
+        {% elif related_products and related_products.exists %}
+            <p class="search-hint">No exact matches found. Showing related products instead.</p>
+            <div class="product-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6">
+                {% for product in related_products %}
+                    {% include 'partials/_product_card.html' with product=product %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-message">
+                <p>No products matched “{{ search_query }}”. Please try another keyword like Almirah, Trunk, Cooler.</p>
+            </div>
+        {% endif %}
+    </section>
+{% endif %}
+
+        <h2 data-aos="fade-up">Special Offer For You</h2>
+
+        <div class="gallery" data-aos="fade-up" data-aos-delay="100">
+            <div class="product-slider">
+                {% if special_offers %}
+                    {% for product in special_offers %}
+                        {% include 'partials/_product_card.html' with product=product %}
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-message">
+                        <p>No Special Offers are available at the moment.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+
+    <section class="product-section" data-aos="fade-up">
+        <h2>Our Popular Models</h2>
+        <div class="product-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6">
+            {% if popular_products %}
+                {% for product in popular_products %}
+                    {% include 'partials/_product_card.html' with product=product %}
+                {% endfor %}
+            {% else %}
+                <div class="empty-message">
+                    <p>No Popular Products are available at the moment.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="product-section" data-aos="fade-up">
+        <h2>Shop by Category</h2>
+
+        <div class="category-section">
+            <h3>Almirah</h3>
+            <p class="category-subtitle">Featured Almirah products selected from the admin panel.</p>
+            <div class="product-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6">
+                {% for product in almirah_products %}
+                    {% include 'partials/_product_card.html' with product=product %}
+                {% empty %}
+                    <div class="empty-message">
+                        <p>No almirah products are selected for the homepage yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h3>Cooler</h3>
+            <p class="category-subtitle">Featured Cooler products selected from the admin panel.</p>
+            <div class="product-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6">
+                {% for product in cooler_products %}
+                    {% include 'partials/_product_card.html' with product=product %}
+                {% empty %}
+                    <div class="empty-message">
+                        <p>No cooler products are selected for the homepage yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h3>Trunk</h3>
+            <p class="category-subtitle">Featured Trunk products selected from the admin panel.</p>
+            <div class="product-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6">
+                {% for product in trunk_products %}
+                    {% include 'partials/_product_card.html' with product=product %}
+                {% empty %}
+                    <div class="empty-message">
+                        <p>No trunk products are selected for the homepage yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h3>Stand</h3>
+            <p class="category-subtitle">Featured Stand products selected from the admin panel.</p>
+            <div class="product-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6">
+                {% for product in stand_products %}
+                    {% include 'partials/_product_card.html' with product=product %}
+                {% empty %}
+                    <div class="empty-message">
+                        <p>No stand products are selected for the homepage yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="review-slider-section py-5" data-aos="fade-up">
+        <div class="container">
+            <div class="section-header text-center mb-4">
+                <h2>Customer Reviews</h2>
+                <p class="text-muted mx-auto" style="max-width: 640px;">Approved reviews from real customers across our product range.</p>
+            </div>
+            <div class="swiper review-swiper">
+                <div class="swiper-wrapper">
+                    {% if reviews %}
+                        {% for review in reviews %}
+                            <div class="swiper-slide">
+                                <div class="review-card p-4 h-100">
+                                    <div class="review-card-top d-flex align-items-center gap-3 mb-3">
+                                        <img src="{% static 'default_profile.svg' %}" alt="{{ review.reviewer_name }}" class="review-avatar rounded-circle">
+                                        <div>
+                                            <h5 class="mb-1">{{ review.reviewer_name }}</h5>
+                                            <span class="text-muted small">{{ review.product_type|title }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="review-stars mb-3">
+                                        {% for _ in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <p class="review-text text-secondary mb-4"><i class="fas fa-quote-left quote-icon"></i>{{ review.comment }}</p>
+                                    <div class="review-footer mt-auto">
+                                        <span class="badge bg-primary bg-opacity-10 text-primary">Approved Review</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="swiper-slide">
+                            <div class="review-card p-4 text-center">
+                                <p class="mb-0 text-secondary">No approved customer reviews are available at the moment.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="shop-info">
+
+        <h2>Visit Our Shop</h2>
+
+        <p>Sunil Trunk House</p>
+        <p>Steel Almirah | Trunk | Cooler | Steel Stand</p>
+        <p>📞 Phone: +91 6386569834</p>
+
+        <iframe src="https://maps.google.com/maps?q=india&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+
+    </section>
+
+    {% include 'footer.html' %}
+
+  
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Swiper !== 'undefined') {
+                new Swiper('.review-swiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 24,
+                    loop: true,
+                    autoplay: {
+                        delay: 4500,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.review-swiper .swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+
+                        nextEl: '.review-swiper .swiper-button-next',
+                        prevEl: '.review-swiper .swiper-button-prev',
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 1 },
+                        768: { slidesPerView: 2 },
+                        992: { slidesPerView: 3 },
+                        1200: { slidesPerView: 4 },
+                        1400: { slidesPerView: 5 },
+                    },
+                });
+            }
+        });
+
+    </script>
+    <script>
+        const slides = document.querySelectorAll('.hero-slider-container .slide');
+        let currentSlide = 0;
+        let slideInterval = null;
+
+        const showSlide = (index) => {
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === index);
+            });
+        };
+
+        const moveSlide = (direction) => {
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            showSlide(currentSlide);
+        };
+
+        const startSlider = () => {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => moveSlide(1), 5000);
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (slides.length === 0) return;
+            showSlide(currentSlide);
+            startSlider();
+
+            const slider = document.querySelector('.hero-slider-container');
+            slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+            slider.addEventListener('mouseleave', startSlider);
+
+            document.querySelectorAll('.nav-btn').forEach((button) => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (button.classList.contains('prev')) {
+                        moveSlide(-1);
+                    } else {
+                        moveSlide(1);
+                    }
+                });
+            });
+        });
+
+        window.moveSlide = moveSlide;
+    </script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 50,
+            });
+        });
+    </script>
+    </main>
+
+</body>
+</html>

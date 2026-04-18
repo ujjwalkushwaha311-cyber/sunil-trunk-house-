@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracker | Sunil Trunk House</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="tracker-page">
+{% include 'navbar.html' %}
+<main>
+
+    <main class="hero-section">
+        <section class="hero-copy">
+            <div class="eyebrow"><i class="fas fa-truck"></i> Order Tracking</div>
+            <h1>Track your order with confidence.</h1>
+            <p>Use a secure order reference to view delivery status, item details, and the latest updates from our support team.</p>
+            
+            <div class="hero-highlights">
+                <div class="highlight-card">
+                    <strong>Real-time updates</strong>
+                    <span>Instant order progress and delivery notifications.</span>
+                </div>
+                <div class="highlight-card">
+                    <strong>Secure lookup</strong>
+                    <span>Only your order ID is required for quick access.</span>
+                </div>
+                <div class="highlight-card">
+                    <strong>Dedicated support</strong>
+                    <span>Reach out directly if you need help with your order.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="hero-side">
+            <div class="status-panel">
+                <div class="tracker-container">
+                    <div class="tracker-header">
+                        <div class="icon"><i class="fas fa-shipping-fast"></i></div>
+                        <h2>TRACK YOUR ORDER</h2>
+                        <p>Enter the order ID below to see the latest delivery status.</p>
+                    </div>
+                    <div class="tracker-body">
+                        <form method="GET" action="{% url 'track_order' %}" class="search-box-area">
+                            <input type="text" name="order_id" placeholder="Example: STH-1001" value="{{ query|default:'' }}" required>
+                            <button type="submit">Check Status</button>
+                        </form>
+
+                        {% if result %}
+                            <div class="result-card">
+                                <div class="result-item">
+                                    <label>Customer Name</label>
+                                    <p>{{ result.customer_name }}</p>
+                                </div>
+                                <div class="result-item">
+                                    <label>Delivery Status</label>
+                                    <span class="status-tag {% if result.delivery_status == 'DELIVERED' %}solved{% elif result.delivery_status == 'SHIPPED' or result.delivery_status == 'IN TRANSIT' %}processing{% else %}pending{% endif %}">{{ result.delivery_status }}</span>
+                                </div>
+                                <div class="result-item">
+                                    <label>Order Number</label>
+                                    <p>{{ result.order_number }}</p>
+                                </div>
+                                <div class="result-item">
+                                    <label>Items Details</label>
+                                    <p>{{ result.product_details }}</p>
+                                </div>
+                                <div class="result-item">
+                                    <label>Order Placed</label>
+                                    <p>{{ result.order_date }}</p>
+                                </div>
+                            </div>
+                        {% elif query %}
+                            <div class="alert-box">
+                                <div><i class="fas fa-exclamation-triangle"></i> Order ID "{{ query }}" not found.</div>
+                                <div>Please check the order ID and try again, or contact support if you need help.</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    {% include 'footer.html' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var popup = document.getElementById('status-popup');
+            if (!popup) return;
+
+            var closeButton = popup.querySelector('.popup-close');
+            var hidePopup = function () {
+                popup.classList.remove('visible');
+            };
+
+            if (closeButton) {
+                closeButton.addEventListener('click', hidePopup);
+            }
+
+            setTimeout(hidePopup, 7000);
+        });
+    </script>
+</body>
+</html>

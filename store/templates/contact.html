@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Sunil Trunk House</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="contact-page">
+{% include 'navbar.html' %}
+<main>
+<section class="page-header">
+    <h1>Contact Sunil Trunk House</h1>
+    <p>Reach out for product inquiries, warranty support, bulk orders, or personalised service.</p>
+</section>
+{% if messages %}
+    <div class="form-notice">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+<div class="contact-wrapper">
+    <div class="contact-grid">
+        <section class="panel">
+            <h2>How can we help you?</h2>
+            <p>Sunil Trunk House is committed to providing fast, reliable support for every customer. Our team is available to assist with sales, installation, warranty support and custom storage solutions.</p>
+            <div class="contact-details">
+                <div class="contact-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong>Head Office</strong>
+                        <p>Sunil Trunk House, [Your Area/Street], Varanasi, Uttar Pradesh</p>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <strong>Phone Support</strong>
+                        <p>+91 6386569834</p>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <strong>Email</strong>
+                        <p>info@suniltrunkhouse.com</p>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <strong>Business Hours</strong>
+                        <p>Mon - Sat: 9:30 AM - 6:30 PM</p>
+                    </div>
+                </div>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115348.66038318723!2d82.9087063462963!3d25.31764522436444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398e2db7607b0407%3A0xef50106dc47a957b!2sVaranasi%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1712345678910!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </section>
+        <section class="panel">
+            <h2>Send Us a Message</h2>
+            <form class="contact-form" method="post" action="{% url 'contact' %}">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-control">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+91 6386569834" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-control">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" placeholder="What is this about?" required>
+                    </div>
+                </div>
+                <div class="form-control">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" placeholder="Write your message here" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Submit Request</button>
+            </form>
+            <p class="footer-small">For warranty or order tracking, please include your order number or product serial number in the message.</p>
+        </section>
+    </div>
+</div>
+    </main>
+    {% include 'footer.html' %}
+</body>
+</html>

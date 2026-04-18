@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Tracker | Sunil Trunk House</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="tracker-page">
+{% include 'navbar.html' %}
+<main>
+
+<main class="hero-section">
+    <section class="hero-copy">
+        <div class="eyebrow"><i class="fas fa-comments-dollar"></i> Complaint Tracking</div>
+        <h1>Track your complaint progress instantly.</h1>
+        <p>Use your complaint reference number to view the current status, admin response, and next steps from our support team.</p>
+
+        <div class="hero-highlights">
+            <div class="highlight-card">
+                <strong>Clear updates</strong>
+                <span>Know whether your complaint is pending, in review, or resolved.</span>
+            </div>
+            <div class="highlight-card">
+                <strong>Fast response</strong>
+                <span>See the latest support team message as soon as it is available.</span>
+            </div>
+            <div class="highlight-card">
+                <strong>Secure lookup</strong>
+                <span>Only the complaint reference number is required.</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero-side">
+        <div class="status-panel">
+            <div class="tracker-container">
+                <div class="tracker-header">
+                    <div class="icon"><i class="fas fa-comments-dollar"></i></div>
+                    <h2>Track Your Complaint</h2>
+                    <p>Enter the complaint reference below to view the latest status and support response.</p>
+                </div>
+                <div class="tracker-body">
+                    <form method="GET" action="{% url 'track_complain' %}" class="search-box-area">
+                        <input type="text" name="order_id" placeholder="Example: C-12345" value="{{ query|default:'' }}" required>
+                        <button type="submit">Check Status</button>
+                    </form>
+
+                    {% if result %}
+                        <div class="result-card">
+                            <div class="result-item">
+                                <label>Customer Name</label>
+                                <p>{{ result.name }}</p>
+                            </div>
+                            <div class="result-item">
+                                <label>Complaint Status</label>
+                                <span class="status-tag {% if result.status == 'SOLVED' %}solved{% elif result.status == 'IN REVIEW' or result.status == 'PROCESSING' %}processing{% else %}pending{% endif %}">{{ result.status }}</span>
+                            </div>
+                            <div class="result-item">
+                                <label>Admin Response</label>
+                                <p>{{ result.message|default:'A response will be published once the complaint is reviewed.' }}</p>
+                            </div>
+                            <div class="result-item">
+                                <label>Product Type</label>
+                                <p>{{ result.product_type }}</p>
+                            </div>
+                            <div class="result-item">
+                                <label>Purchase Date</label>
+                                <p>{{ result.purchase_date }}</p>
+                            </div>
+                        </div>
+                    {% elif query %}
+                        <div class="alert-box">
+                            <div><i class="fas fa-exclamation-triangle"></i> Complaint ID "{{ query }}" not found.</div>
+                            <div>Please check the reference number and try again.</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+    </main>
+    {% include 'footer.html' %}
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Status | Sunil Trunk House</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+        
+</header>
+    <section class="page-header">
+        <h2>Track Your Request</h2>
+        <p>Select what you would like to track today.</p>
+    </section>
+
+    <main class="track-hub-container">
+        <div class="track-selection">
+            <div class="track-card" onclick="location.href='order-track.html'">
+                <i class="fas fa-truck-loading"></i>
+                <h3>Track My Order</h3>
+                <p>Check delivery status of your Almirah, Trunk, or Cooler.</p>
+                <span class="track-link">Go to Order Tracker →</span>
+            </div>
+
+            <div class="track-card" onclick="location.href='track.html'">
+                <i class="fas fa-tools"></i>
+                <h3>Track My Complaint</h3>
+                <p>Check the progress of your service or repair request.</p>
+                <span class="track-link">Go to Complaint Tracker →</span>
+            </div>
+        </div>
+
+        <div class="help-box">
+            <p>Can't find your ID? Call us at <strong>+91 6386569834</strong></p>
+        </div>
+    </main>
+
+    <footer>
+        <h3>Sunil Trunk House</h3>
+        <p>© 2026 | Quality and Service You Can Trust</p>
+    </footer>
+
+</body>
+</html>

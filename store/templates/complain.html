@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint | Sunil Trunk House</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+{% include 'navbar.html' %}
+
+    <section class="page-header">
+        <div class="page-header-inner">
+            <span class="section-badge">Complaint Service</span>
+            <h1>File a Professional Complaint</h1>
+            <p>Share your purchase details, invoice, and issue summary so our support team can respond quickly.</p>
+        </div>
+    </section>
+
+    <main>
+        <div class="complain-container">
+            <div class="complain-grid">
+                <div class="complain-form-box">
+                    <div class="complaint-header">
+                        <h2>Submit a Complaint</h2>
+                        <p>Fill in the details below and attach your bill copy to help us resolve the issue faster.</p>
+                    </div>
+                    <div class="complaint-notice">
+                        <div class="complaint-note">
+                            <strong>What happens next?</strong>
+                            <ul>
+                                <li>Our team reviews your request within 24 hours.</li>
+                                <li>We contact you on the provided phone or email.</li>
+                                <li>We assign a service representative for follow-up.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if messages %}
+                        <div class="form-messages">
+                            {% for message in messages %}
+                                <div class="message {{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="serial_number">Serial Number</label>
+                                <input type="text" id="serial_number" name="serial_number" placeholder="Product serial number" required>
+                            </div>
+                        </div>
+
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="purchase_date">Purchase Date</label>
+                                <input type="date" id="purchase_date" name="purchase_date" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="product_type">Select Product</label>
+                                <select id="product_type" name="product_type" required>
+                                    <option value="">Choose a product</option>
+                                    <option value="Almirah">Almirah</option>
+                                    <option value="Stand">Steel Stand</option>
+                                    <option value="Trunk">Trunk</option>
+                                    <option value="Cooler">Cooler</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" placeholder="Enter your mobile number" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="message">Complaint Description</label>
+                            <textarea id="message" name="message" rows="5" placeholder="Tell us what issue you are facing" required></textarea>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="bill_copy">Upload Bill / Invoice Photo</label>
+                            <input type="file" id="bill_copy" name="bill_copy" accept="image/*,application/pdf" required>
+                        </div>
+
+                        <button class="submit-btn" type="submit">Submit Complaint</button>
+                    </form>
+                </div>
+
+                <aside class="contact-card">
+                    <h4>Need Assistance?</h4>
+                    <p>Our customer care team is available to help with complaint submission, documentation, or service questions.</p>
+                    <div class="contact-list">
+                        <div><strong>Phone:</strong> <a href="tel:+916386569834">+91 63865 69834</a></div>
+                        <div><strong>Email:</strong> <a href="mailto:support@suniltrunkhouse.com">support@suniltrunkhouse.com</a></div>
+                        <div><strong>Office Hours:</strong> Mon - Sat, 10:00 AM to 6:00 PM</div>
+                    </div>
+                    <div class="contact-card-cta">
+                        <p>For urgent matters, use WhatsApp or email us with your complaint reference number.</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

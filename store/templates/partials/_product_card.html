@@ -1,0 +1,76 @@
+<div class="product-card" data-product-id="{{ product.id }}">
+    <div class="card-media bg-gray-50 rounded-lg h-64">
+        {% if product.discount_percent and product.discount_percent > 0 %}
+            <span class="discount-badge">{{ product.discount_percent }}% OFF</span>
+        {% elif product.badge and product.badge != 'None' %}
+            <span class="badge badge-{{ product.badge|slugify }}">{{ product.badge }}</span>
+        {% endif %}
+
+        <div class="image-wrap h-64">
+            {% if product.image %}
+                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <div class="image-placeholder">No image available</div>
+            {% endif %}
+
+            <div class="card-add-to-cart {% if product.id in cart_ids %}cart-item-added{% else %}cart-item-empty{% endif %}" data-product-id="{{ product.id }}" data-in-cart="{% if product.id in cart_ids %}true{% else %}false{% endif %}">
+                <button type="button" class="cart-icon-btn {% if product.id in cart_ids %}cart-icon-active{% else %}cart-icon-inactive{% endif %}" aria-label="Toggle Cart Item">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-info bg-white">
+        {% if tagline|default:product.tagline %}
+            <span class="product-tag">{{ tagline|default:product.tagline }}</span>
+        {% endif %}
+        <h3 class="product-name">{{ product.name|upper }}</h3>
+        <div class="product-specs">
+            {% if product.dimensions %}
+                <span class="product-dimensions">📏 {{ product.dimensions }}</span>
+            {% endif %}
+            {% if product.stock_status %}
+                <div class="stock-row">
+                    <span class="status-pill {% if product.is_in_stock %}in-stock{% else %}out-stock{% endif %}">{{ product.stock_status }}</span>
+                    {% if product.color_options %}
+                        <div class="swatch-list">
+                            {% for color in product.color_options|slice:":3" %}
+                                <span class="color-swatch" style="background-color: {{ color }};" title="{{ color }}"></span>
+                            {% endfor %}
+                            {% if product.color_options|length > 3 %}
+                                {% for color in product.color_options|slice:"3:" %}
+                                    <span class="color-swatch hidden-swatch" style="background-color: {{ color }};" title="{{ color }}"></span>
+                                {% endfor %}
+                                <button type="button" class="swatch-expand-btn" aria-expanded="false">+{{ product.color_options|length|add:"-3" }}</button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="price-row">
+            <span class="price-text">₹{{ product.price }}</span>
+            {% if product.discount_percent and product.discount_percent > 0 and product.mrp > 0 %}
+                <span class="old-price"><del>₹{{ product.mrp }}</del></span>
+            {% endif %}
+        </div>
+
+        <div class="product-actions">
+            {% if product.is_in_stock %}
+                <button
+                    type="button"
+                    class="btn buy-now-btn btn-primary"
+                    data-product-id="{{ product.id }}"
+                    data-product-name="{{ product.name }}"
+                    data-product-price="{{ product.price }}"
+                >
+                    Buy Now
+                </button>
+            {% else %}
+                <button type="button" class="btn btn-secondary" disabled>Out of Stock</button>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,397 @@
+{% load static %}
+<header class="site-header">
+    <div class="navbar-container">
+        <div class="navbar">
+            <div class="navbar-brand">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'almirah_img/logo/sth_logo.webp' %}" alt="Sunil Trunk House Logo">
+                </a>
+            </div>
+
+            <button id="navbar-toggle" class="navbar-toggle" type="button" aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-search">
+                <form method="GET" action="{% url 'products' %}" class="navbar-search-form">
+                    <div class="search-input-group">
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request.GET.search|default:'' }}"
+                            placeholder="Search Almirahs, Trunks, Coolers..."
+                            aria-label="Search products"
+                        >
+                    </div>
+                    <button type="submit" class="search-submit" aria-label="Search">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
+
+        <div class="navbar-collapse" id="navbar-collapse">
+            <nav class="navbar-links">
+                <ul class="nav-links">
+                    <li class="nav-item"><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="{% url 'products' %}" class="{% if request.resolver_match.url_name == 'products' or request.resolver_match.url_name == 'almirah' or request.resolver_match.url_name == 'trunk' or request.resolver_match.url_name == 'coller' or request.resolver_match.url_name == 'stand' %}active{% endif %}">Products <i class="fas fa-chevron-down dropdown-caret"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'almirah' %}">Almirah</a></li>
+                            <li><a href="{% url 'trunk' %}">Trunk Box</a></li>
+                            <li><a href="{% url 'coller' %}">Cooler</a></li>
+                            <li><a href="{% url 'stand' %}">Steel Stand</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' or request.resolver_match.url_name == 'authenticity' or request.resolver_match.url_name == 'contact' %}active{% endif %}">Company <i class="fas fa-chevron-down dropdown-caret"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'about' %}">About</a></li>
+                            <li><a href="{% url 'authenticity' %}">Authenticity</a></li>
+                            <li><a href="{% url 'contact' %}">Contact</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="{% url 'track_order' %}" class="{% if request.resolver_match.url_name == 'track_order' or request.resolver_match.url_name == 'track_complain' %}active{% endif %}">Track <i class="fas fa-chevron-down dropdown-caret"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'track_complain' %}">Track Complaint</a></li>
+                            <li><a href="{% url 'track_order' %}">Track Order</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'complain' %}" class="nav-link">Complain</a>
+                    </li>
+                    <li class="nav-item nav-cart-item">
+                        <a id="nav-cart-link" href="{% url 'cart' %}" class="cart-link {% if cart_count and cart_count > 0 %}cart-has-items{% else %}cart-empty{% endif %}">
+                            <span class="cart-icon"><i class="fas fa-shopping-cart"></i></span>
+                            <span>Cart</span>
+                            {% if cart_count and cart_count > 0 %}
+                                <span class="cart-badge">{{ cart_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.swatch-expand-btn')) {
+                return;
+            }
+            var button = event.target.closest('.swatch-expand-btn');
+            var container = button.closest('.swatch-list');
+            var hiddenSwatches = container.querySelectorAll('.color-swatch.hidden-swatch');
+            var expanded = button.getAttribute('aria-expanded') === 'true';
+            hiddenSwatches.forEach(function(swatch) {
+                swatch.style.display = expanded ? 'none' : 'inline-flex';
+            });
+            button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            button.textContent = expanded ? '+' + hiddenSwatches.length : '−';
+        });
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function showToast(message, type) {
+            var toast = document.getElementById('global-toast');
+            if (!toast) {
+                return;
+            }
+            toast.textContent = message;
+            toast.className = 'global-toast show ' + (type || 'success');
+            clearTimeout(window.globalToastTimer);
+            window.globalToastTimer = setTimeout(function() {
+                toast.className = 'global-toast';
+            }, 3200);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggleButton = document.getElementById('navbar-toggle');
+            var navbarCollapse = document.getElementById('navbar-collapse');
+            if (!toggleButton || !navbarCollapse) {
+                return;
+            }
+
+            toggleButton.addEventListener('click', function() {
+                var isOpen = this.classList.toggle('open');
+                this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                navbarCollapse.classList.toggle('open');
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!navbarCollapse.contains(event.target) && !toggleButton.contains(event.target) && navbarCollapse.classList.contains('open')) {
+                    navbarCollapse.classList.remove('open');
+                    toggleButton.classList.remove('open');
+                    toggleButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+
+        document.addEventListener('click', function(event) {
+            var dropdownToggle = event.target.closest('.nav-item.dropdown > a');
+            if (dropdownToggle && window.innerWidth <= 720) {
+                event.preventDefault();
+                var dropdown = dropdownToggle.parentElement;
+                dropdown.classList.toggle('open');
+                return;
+            }
+
+            var cartIcon = event.target.closest('.cart-icon-btn');
+            if (!cartIcon) {
+                return;
+            }
+
+            event.preventDefault();
+            var wrapper = cartIcon.closest('.card-add-to-cart');
+            if (!wrapper) {
+                return;
+            }
+
+            var productId = wrapper.dataset.productId;
+            if (!productId) {
+                return;
+            }
+
+            cartIcon.disabled = true;
+            fetch('/cart/toggle/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({ product_id: productId }),
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    cartIcon.disabled = false;
+                    if (!data.success) {
+                        showToast(data.message || 'Unable to update cart.', 'error');
+                        return;
+                    }
+
+                    var isInCart = data.action === 'added';
+                    showToast(data.action === 'added' ? 'Added to cart' : 'Removed from cart', 'success');
+                    wrapper.dataset.inCart = isInCart ? 'true' : 'false';
+                    wrapper.classList.toggle('cart-item-added', isInCart);
+                    wrapper.classList.toggle('cart-item-empty', !isInCart);
+                    cartIcon.classList.toggle('cart-icon-active', isInCart);
+                    cartIcon.classList.toggle('cart-icon-inactive', !isInCart);
+
+                    var navCartLink = document.getElementById('nav-cart-link');
+                    if (navCartLink) {
+                        var badge = navCartLink.querySelector('.cart-badge');
+                        if (data.cart_count > 0) {
+                            if (!badge) {
+                                badge = document.createElement('span');
+                                badge.className = 'cart-badge';
+                                navCartLink.appendChild(badge);
+                            }
+                            badge.textContent = data.cart_count;
+                            navCartLink.classList.add('cart-has-items');
+                            navCartLink.classList.remove('cart-empty');
+                        } else {
+                            if (badge) {
+                                badge.remove();
+                            }
+                            navCartLink.classList.remove('cart-has-items');
+                            navCartLink.classList.add('cart-empty');
+                        }
+                    }
+                })
+                .catch(function(error) {
+                    cartIcon.disabled = false;
+                    console.error(error);
+                    showToast('Unable to update cart right now.', 'error');
+                });
+        });
+
+        function openBuyNowModal(button) {
+            var orderForm = document.getElementById('buy-now-order-form');
+            orderForm.dataset.productId = button.dataset.productId;
+            orderForm.dataset.productName = button.dataset.productName;
+            document.getElementById('buy-now-product-name').textContent = button.dataset.productName;
+            document.getElementById('buy-now-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBuyNowModal() {
+            document.getElementById('buy-now-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('click', function(event) {
+            var buyNowButton = event.target.closest('.buy-now-btn');
+            if (buyNowButton) {
+                event.preventDefault();
+                openBuyNowModal(buyNowButton);
+                return;
+            }
+
+            if (event.target.closest('#buy-now-modal') && event.target.id === 'buy-now-modal') {
+                closeBuyNowModal();
+            }
+
+            if (event.target.closest('.buy-now-modal-close')) {
+                event.preventDefault();
+                closeBuyNowModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var buyNowOrderForm = document.getElementById('buy-now-order-form');
+            if (!buyNowOrderForm) {
+                return;
+            }
+
+            var buyNowUrlTemplate = '{% url "buy_now_checkout" 0 %}';
+            var razorpayCallbackUrl = '{% url "razorpay_payment_callback" %}';
+            var razorpayKeyId = '{{ razorpay_key_id|escapejs }}';
+
+            buyNowOrderForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                var form = event.currentTarget;
+                var productId = form.dataset.productId;
+                var productName = form.dataset.productName;
+                var customerName = form.querySelector('[name="customer_name"]').value.trim();
+                var customerPhone = form.querySelector('[name="customer_phone"]').value.trim();
+                var customerEmail = form.querySelector('[name="customer_email"]').value.trim();
+                var customerAddress = form.querySelector('[name="customer_address"]').value.trim();
+                var submitButton = form.querySelector('button[type="submit"]');
+
+                if (!customerName || !customerPhone || !customerAddress) {
+                    window.alert('Please enter your name, phone number, and delivery address.');
+                    return;
+                }
+
+                submitButton.disabled = true;
+                submitButton.textContent = 'Starting payment...';
+
+                var buyNowUrl = buyNowUrlTemplate.replace('/0/', '/' + productId + '/');
+                fetch(buyNowUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        customer_name: customerName,
+                        customer_phone: customerPhone,
+                        customer_email: customerEmail,
+                        customer_address: customerAddress,
+                    }),
+                })
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('Server returned ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Pay with Razorpay';
+                        if (!data.success) {
+                            window.alert(data.message || 'Unable to create order.');
+                            return;
+                        }
+
+                        closeBuyNowModal();
+
+                        var options = {
+                            key: razorpayKeyId,
+                            amount: data.amount,
+                            currency: data.currency,
+                            name: 'Sunil Trunk House',
+                            description: productName,
+                            order_id: data.razorpay_order_id,
+                            handler: function(response) {
+                                return fetch(razorpayCallbackUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': getCookie('csrftoken'),
+                                    },
+                                    body: JSON.stringify({
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                    }),
+                                })
+                                    .then(function(callbackResponse) {
+                                        if (!callbackResponse.ok) {
+                                            throw new Error('Server returned ' + callbackResponse.status);
+                                        }
+                                        return callbackResponse.json();
+                                    })
+                                    .then(function(callbackData) {
+                                        if (callbackData.success) {
+                                            window.location.href = callbackData.redirect_url;
+                                        } else {
+                                            window.alert(callbackData.message || 'Payment verification failed.');
+                                        }
+                                    });
+                            },
+                            prefill: {
+                                name: customerName,
+                                email: customerEmail,
+                                contact: customerPhone,
+                            },
+                            notes: {
+                                product_name: productName,
+                            },
+                            theme: {
+                                color: '#0d6efd',
+                            },
+                        };
+
+                        var razorpayPopup = new Razorpay(options);
+                        razorpayPopup.open();
+                    })
+                    .catch(function(error) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Pay with Razorpay';
+                        console.error(error);
+                        window.alert('Unexpected error while opening checkout.');
+                    });
+            });
+        });
+    </script>
+
+    <div id="global-toast" class="global-toast"></div>
+    <div id="buy-now-modal" class="buy-now-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;z-index:1050;">
+        <div class="buy-now-modal-dialog" style="background:#fff;max-width:520px;width:100%;padding:24px;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,0.2);position:relative;">
+            <button type="button" class="buy-now-modal-close" style="position:absolute;top:16px;right:16px;border:none;background:none;font-size:1.4rem;color:#333;cursor:pointer;">×</button>
+            <h2 style="margin-bottom:1rem;">Complete Your Order</h2>
+            <p style="margin-bottom:1rem;">Product: <strong id="buy-now-product-name"></strong></p>
+            <form id="buy-now-order-form" data-product-id="" data-product-name="" data-product-price="">
+                <div style="display:grid;gap:12px;">
+                    <input type="text" name="customer_name" placeholder="Full name" required style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;">
+                    <input type="tel" name="customer_phone" placeholder="Phone number" required style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;">
+                    <input type="email" name="customer_email" placeholder="Email address" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;">
+                    <textarea name="customer_address" placeholder="Delivery address" rows="3" required style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;"></textarea>
+                    <button type="submit" class="btn btn-primary" style="padding:12px 20px;border:none;border-radius:8px;font-weight:700;">Pay with Razorpay</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</header>

@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<div id="branding">
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+    {% if unresolved_complaint_count %}
+    <div class="module" style="margin-top:10px; padding:12px; background:#fff3cd; border:1px solid #ffeeba; border-radius:6px;">
+        <strong>Unresolved Complaints:</strong> {{ unresolved_complaint_count }}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Authenticity | Sunil Trunk House</title>
+   <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="authenticity-page">
+{% include 'navbar.html' %}
+<main>
+
+
+    <section class="auth-hero">
+        <div class="container">
+            <h2>Verify Your Product</h2>
+            <p>Ensure you have purchased a genuine <strong>Sunil Trunk House</strong> product. Don't settle for local duplicates.</p>
+        </div>
+    </section>
+
+    <main class="auth-container">
+        <div class="auth-box">
+            <i class="fas fa-shield-check" style="font-size: 3rem; color: #27ae60; margin-bottom: 20px;"></i>
+            <h3>Enter Serial Number</h3>
+            <p>Look for the 10-digit serial number on your Almirah door or your official bill.</p>
+            
+            <div class="search-box">
+                <input type="text" id="serialInput" placeholder="e.g. STH-2026-XXXX">
+                <button onclick="verifyProduct()" class="track-btn">Verify Now</button>
+            </div>
+
+            <div id="authResult" class="auth-msg" style="display: none;">
+                <div class="result-icon" id="resIcon"></div>
+                <h4 id="resTitle"></h4>
+                <p id="resText"></p>
+                <div id="authDetails" class="auth-details" style="display: none;"></div>
+            </div>
+        </div>
+
+        <section class="how-to-check">
+            <h3>How to identify an Original?</h3>
+            <div class="guide-grid">
+                <div class="guide-card">
+                    <i class="fas fa-stamp"></i>
+                    <h4>Embossed Logo</h4>
+                    <p>Every original Almirah has "Sunil Trunk House" embossed directly on the steel frame.</p>
+                </div>
+                <div class="guide-card">
+                    <i class="fas fa-file-invoice"></i>
+                    <h4>Original Bill</h4>
+                    <p>Always demand a printed bill with our registered GST/Trade number.</p>
+                </div>
+                <div class="guide-card">
+                    <i class="fas fa-lock"></i>
+                    <h4>Branded Locks</h4>
+                    <p>We only use high-security branded locks with the STH seal.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        async function verifyProduct() {
+            const serial = document.getElementById("serialInput").value.trim();
+            const result = document.getElementById("authResult");
+            const resIcon = document.getElementById("resIcon");
+            const resTitle = document.getElementById("resTitle");
+            const resText = document.getElementById("resText");
+
+            if (!serial) {
+                result.style.display = "block";
+                result.className = "auth-msg fail";
+                resIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                resTitle.innerText = "Verification Failed";
+                resText.innerText = "Please enter a serial number to verify.";
+                return;
+            }
+
+            const response = await fetch(`/authenticity/verify/?serial=${encodeURIComponent(serial)}`);
+            const data = await response.json();
+
+            result.style.display = "block";
+            result.className = `auth-msg ${data.status === 'success' ? 'success' : 'fail'}`;
+            resIcon.innerHTML = data.status === 'success'
+                ? '<i class="fas fa-check-circle"></i>'
+                : '<i class="fas fa-times-circle"></i>';
+            resTitle.innerText = data.title;
+            resText.innerText = data.text;
+
+            const authDetails = document.getElementById('authDetails');
+            if (data.status === 'success') {
+                authDetails.style.display = 'block';
+                authDetails.innerHTML = `
+                    <p><strong>Customer:</strong> ${data.customer_name || 'N/A'}</p>
+                    <p><strong>Product Type:</strong> ${data.product_type || 'N/A'}</p>
+                    <p><strong>Product Name:</strong> ${data.product_name || 'N/A'}</p>
+                    <p><strong>Purchase Date:</strong> ${data.purchase_date || 'N/A'}</p>
+                    <p><strong>Warranty Activate:</strong> ${data.warranty_activate_date || 'N/A'}</p>
+                    <p><strong>Warranty Expiry:</strong> ${data.warranty_expiry_date || 'N/A'}</p>
+                    <p><strong>Warranty Status:</strong> ${data.warranty_status || 'N/A'}</p>
+                `;
+            } else {
+                authDetails.style.display = 'none';
+                authDetails.innerHTML = '';
+            }
+        }
+    </script>
+
+    {% include 'footer.html' %}
+
+</body>
+</html>

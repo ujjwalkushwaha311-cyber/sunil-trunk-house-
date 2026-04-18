@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Sunil Trunk House</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="about-page">
+{% include 'navbar.html' %}
+<main>
+
+    <div class="about-section">
+        <div class="title-area">
+            <h2 style="margin:0; color:#333;">About Sunil Trunk House</h2>
+            <p style="margin:10px 0 0; color:#555; font-size:16px;">Premium steel storage solutions with a legacy of quality, durability, and customer trust.</p>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-text">
+                <h3>Premium Strength. Trusted Craftsmanship.</h3>
+                <p><strong>Sunil Trunk House</strong> is a leading manufacturer of steel storage products, specializing in almirahs, trunks, coolers, and stands. Since our founding, we have focused on delivering robust, secure, and stylish solutions for homes and businesses.</p>
+                <p>We combine precision engineering with high-grade steel and advanced finish techniques to ensure every product is built for long-lasting performance. Our direct-to-customer approach removes intermediaries, allowing us to offer superior quality at competitive prices.</p>
+                <p>Driven by innovation and customer satisfaction, we are committed to building products that stand the test of time and strengthen your storage experience.</p>
+            </div>
+            <div class="about-image">
+                <img src="{% static 'logo/shop_front.webp' %}" alt="Sunil Trunk House">
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-box">
+                <h4>12+</h4>
+                <p>Years of Excellence</p>
+            </div>
+            <div class="stat-box">
+                <h4>5000+</h4>
+                <p>Happy Customers</p>
+            </div>
+            <div class="stat-box">
+                <h4>99.9%</h4>
+                <p>Quality Satisfaction</p>
+            </div>
+        </div>
+
+        <div class="why-us">
+            <h3>Why Choose Sunil Trunk House?</h3>
+            <div class="why-grid">
+                <div class="why-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Reliable Security</h4>
+                    <p>Every product is designed with enhanced locking systems, premium steel, and secure construction.</p>
+                </div>
+                <div class="why-card">
+                    <i class="fas fa-industry"></i>
+                    <h4>Industry-grade Build</h4>
+                    <p>We use heavy-duty materials and precision fabrication to deliver longer-lasting products.</p>
+                </div>
+                <div class="why-card">
+                    <i class="fas fa-handshake"></i>
+                    <h4>Customer First</h4>
+                    <p>Transparent pricing, responsive support, and a commitment to building trust with every delivery.</p>
+                </div>
+                <div class="why-card">
+                    <i class="fas fa-award"></i>
+                    <h4>Assured Quality</h4>
+                    <p>Quality checks at every stage ensure consistent performance and superior finish.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+    {% include 'footer.html' %}
+
+</body>
+</html>

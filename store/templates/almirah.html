@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almirah Catalogue | Sunil Trunk House</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p/9Tz2h5qko0fg0fgK8r7XjVfWy+HPjH9LXUjOO/cg9ZK7dAwg3V0Gf25Qe6HgzTwqDUEVpqYfvZk9COGF8XlYg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="main-wrapper">
+    <aside class="sidebar">
+        <div class="filter-box">
+            <h3>Filter Almirah</h3>
+            <form method="GET" action="{% url 'almirah' %}">
+                <label class="f-label">Search Model</label>
+                <input type="text" name="search" class="f-input" placeholder="e.g. Royal Tijori" value="{{ request.GET.search }}">
+
+                <label class="f-label">Price Range (₹)</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" name="min_price" class="f-input" placeholder="Min" value="{{ request.GET.min_price }}">
+                    <input type="number" name="max_price" class="f-input" placeholder="Max" value="{{ request.GET.max_price }}">
+                </div>
+
+                <button type="submit" class="btn-apply">APPLY FILTERS</button>
+                <div style="text-align: center; margin-top: 10px;">
+                    <a href="{% url 'almirah' %}" style="text-decoration:none; color:#bbb; font-size:12px;">Reset All</a>
+                </div>
+            </form>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        <div class="top-bar">
+            <span style="font-weight: bold; color: #777;">{{ items|length }} Items Found</span>
+            <form method="GET">
+                <input type="hidden" name="search" value="{{ request.GET.search }}">
+                <select name="sort" class="sort-select" onchange="this.form.submit()" style="padding: 5px; border-radius: 5px; border:1px solid #ddd; outline: none;">
+                    <option value="">Sort By: Default</option>
+                    <option value="p_low" {% if request.GET.sort == 'p_low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="p_high" {% if request.GET.sort == 'p_high' %}selected{% endif %}>Price: High to Low</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="product-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6">
+            {% for x in items %}
+                {% include 'partials/_product_card.html' with product=x %}
+            {% empty %}
+            <div style="grid-column: 1/-1; text-align:center; padding:40px;">
+                <p>No Almirahs match your criteria.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
+
+    {% include 'footer.html' %}
+</body>
+</html>
