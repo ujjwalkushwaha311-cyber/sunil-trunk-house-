@@ -1,5 +1,6 @@
 import os
-
+import pymysql
+pymysql.install_as_MySQLdb()
 """
 Django settings for myproject project.
 
